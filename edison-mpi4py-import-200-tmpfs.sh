@@ -3,12 +3,12 @@
 #SBATCH --job-name=edison-mpi4py-import-200-tmpfs
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=100
+#SBATCH --nodes=200
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-mpi4py-import-200-tmpfs-%j.out
-#SBATCH --partition=debug
-#SBATCH --qos=premium
-#SBATCH --time=00:15:00
+#SBATCH --partition=regular
+#SBATCH --qos=normal
+#SBATCH --time=00:10:00
 
 # Load modules.
 

@@ -3,12 +3,12 @@
 #SBATCH --job-name=cori-mpi4py-import-150-scratch
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=100
+#SBATCH --nodes=150
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-mpi4py-import-150-scratch-%j.out
-#SBATCH --partition=debug
-#SBATCH --qos=premium
-#SBATCH --time=00:15:00
+#SBATCH --partition=regular
+#SBATCH --qos=normal
+#SBATCH --time=00:10:00
 
 # Load modules.
 
