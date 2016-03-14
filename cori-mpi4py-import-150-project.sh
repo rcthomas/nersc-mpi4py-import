@@ -23,9 +23,10 @@ set -x
 # Stage and activate virtualenv.
 
 envsrc=/usr/common/software/python/mpi4py-import
-envdest=/project/projectdirs/mpccc/rthomas
+envdest=/project/projectdirs/mpccc/rthomas/cori
 envpath=$envdest/mpi4py-import
 
+mkdir -p $envdest
 cp -r $envsrc $envdest/.
 sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$envpath\"|" $envpath/bin/activate
 source $envpath/bin/activate
