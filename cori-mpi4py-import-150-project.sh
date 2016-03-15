@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-mpi4py-import-150-project-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=normal
+#SBATCH --qos=low
 #SBATCH --time=00:10:00
 
 # Load modules.

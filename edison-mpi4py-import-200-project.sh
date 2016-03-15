@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-mpi4py-import-200-project-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=normal
+#SBATCH --qos=low
 #SBATCH --time=00:10:00
 
 # Load modules.
