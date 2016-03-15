@@ -24,6 +24,8 @@ import numpy
 
 comm.Barrier()
 if mpi_rank == 0 :
-    print "mpi4py-import elapsed (s): {:.2f}".format( time.time() - float( sys.argv[ 1 ] ) )
+    print "mpi4py-import completed     {}".format( time.strftime( "%x %X" ) )
+    print "mpi4py-import MPI size      {}".format( mpi_size )
+    print "mpi4py-import elapsed (s)   {:.2f}".format( time.time() - float( sys.argv[ 1 ] ) )
 
 comm.Barrier()
