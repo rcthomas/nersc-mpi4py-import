@@ -34,7 +34,7 @@ class Mpi4pyImportRun ( object ) :
             return list( stream )
 
     def __repr__( self ) :
-        result = "{:<10} {:<15} {:<10} {:<20} {:<5} {:8.2f}".format( self.host, self.setup, self.job_id,
+        result = "{:<10} {:<15} {:<10} {:<20} {:>5} {:8.2f}".format( self.host, self.setup, self.job_id,
                 self.executed.isoformat(), self.mpi_size, self.elapsed_time )
         if self.executed.date() == datetime.date.today() :
             result = "\033[1m" + result + "\033[0m"
@@ -70,9 +70,9 @@ if __name__ == "__main__" :
         try :
             runs.append( Mpi4pyImportRun( path ) )
         except :
-            cdate = datetime.date.fromtimestamp( os.path.getctime( path ) )
+            cdate = datetime.datetime.fromtimestamp( os.path.getctime( path ) )
             message = "[WARNING] Unable to parse {} (created {})".format( path, cdate.isoformat() )
-            if cdate == datetime.date.today() :
+            if cdate >= datetime.datetime.now() - datetime.timedelta( hours = 24 ) :
                 message = "\033[1m\033[91m" + message + "\033[0m\033[0m"
             sys.stderr.write( "{}\n".format( message ) )
             pass

@@ -1,14 +1,15 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=cori-mpi4py-import-150-tmpfs
+#SBATCH --job-name=cori-mpi4py-import-003-datawarp
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=150
+#SBATCH --nodes=3
 #SBATCH --ntasks-per-node=32
-#SBATCH --output=slurm-cori-mpi4py-import-150-tmpfs-%j.out
+#SBATCH --output=slurm-cori-mpi4py-import-003-datawarp-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=10
+#SBATCH --time=5
+#DW jobdw capacity=2TB access_mode=striped type=scratch
 
 # Configuration.
 
@@ -32,19 +33,14 @@ fi
 # Stage and activate virtualenv.
 
 benchmark_src=/usr/common/software/python/mpi4py-import
-benchmark_dest=/dev/shm/mpi4py-import/$SLURM_JOBID
+benchmark_dest=$DW_JOB_STRIPED
 benchmark_path=$benchmark_dest/mpi4py-import
 
-srun -n $SLURM_JOB_NUM_NODES mkdir -p $benchmark_dest
-sleep 5
-time srun -n $SLURM_JOB_NUM_NODES rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
-sleep 5
-srun -n $SLURM_JOB_NUM_NODES sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
-sleep 5
+time rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
+sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
 source $benchmark_path/bin/activate
-sleep 5
 
-# Sanity checks.
+# Sanity checks, re-generate bytecode files.
 
 which python
 python -c "import numpy; print numpy.__path__"
@@ -58,6 +54,10 @@ if [ $commit = true ]; then
     python report-benchmark.py initialize
     module unload mysqlpython
 fi
+
+# Allows up to 5 minutes for pynamic-pyMPI to MPI_Init().
+
+export PMI_MMAP_SYNC_WAIT_TIME=300
 
 # Run benchmark.
 

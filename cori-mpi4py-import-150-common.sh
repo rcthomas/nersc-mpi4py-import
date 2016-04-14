@@ -7,27 +7,32 @@
 #SBATCH --ntasks-per-node=32
 #SBATCH --output=slurm-cori-mpi4py-import-150-common-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:10:00
+#SBATCH --qos=normal
+#SBATCH --time=10
+
+# Configuration.
+
+commit=true
+debug=false
 
 # Load modules.
 
+module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
-module list
 
-# Verbose debugging output.
+# Optional debug output.
 
-set -x
+if [ $debug = true ]; then
+    module list
+    set -x
+fi
 
 # Stage and activate virtualenv.
 
-envpath=/usr/common/software/python/mpi4py-import
-source $envpath/bin/activate
-
-# Run benchmark.
-
-time srun python mpi4py-import.py $(date +%s)
+benchmark_path=/usr/common/software/python/mpi4py-import
+source $benchmark_path/bin/activate
 
 # Sanity checks.
 
@@ -35,8 +40,23 @@ which python
 python -c "import numpy; print numpy.__path__"
 strace python -c "import numpy" 2>&1 | grep "open(" | wc
 
-# For usgweb.
+# Initialize benchmark result.
 
-if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Cori_Perf/Pynamic/$SLURM_JOB_ID
+if [ $commit = true ]; then
+    module load mysql
+    module load mysqlpython
+    python report-benchmark.py initialize
+    module unload mysqlpython
+fi
+
+# Run benchmark.
+
+output=latest-$SLURM_JOB_NAME.txt
+time srun python mpi4py-import.py $(date +%s) | tee $output
+
+# Finalize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysqlpython
+    python report-benchmark.py finalize $( grep elapsed $output | awk '{ print $NF }' )
 fi

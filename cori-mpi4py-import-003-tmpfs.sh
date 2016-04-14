@@ -1,14 +1,14 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=cori-mpi4py-import-150-tmpfs
+#SBATCH --job-name=cori-mpi4py-import-003-tmpfs
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=150
+#SBATCH --nodes=3
 #SBATCH --ntasks-per-node=32
-#SBATCH --output=slurm-cori-mpi4py-import-150-tmpfs-%j.out
+#SBATCH --output=slurm-cori-mpi4py-import-003-tmpfs-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=10
+#SBATCH --time=5
 
 # Configuration.
 
