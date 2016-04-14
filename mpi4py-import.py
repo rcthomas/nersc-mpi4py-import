@@ -13,7 +13,11 @@ if mpi_rank == 0 :
 
 import sys
 import time
-import numpy
+try :
+    import numpy
+except :
+    print sys.exc_info()[ : 2 ]
+    comm.Abort()
 
 # Sometimes it is interesting to see timing here too, but I shut this off by
 # default.  If you uncomment this you may also want to unbuffer STDOUT via
