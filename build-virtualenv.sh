@@ -12,6 +12,7 @@
 # whatever the target machine is (/usr/common).
 
 module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
 module load virtualenv
