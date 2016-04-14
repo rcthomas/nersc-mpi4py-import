@@ -1,14 +1,14 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=edison-mpi4py-import-200-project
+#SBATCH --job-name=edison-mpi4py-import-004-project
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=200
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=24
-#SBATCH --output=slurm-edison-mpi4py-import-200-project-%j.out
+#SBATCH --output=slurm-edison-mpi4py-import-004-project-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=10
+#SBATCH --time=5
 
 # Configuration.
 

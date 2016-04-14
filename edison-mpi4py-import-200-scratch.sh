@@ -7,47 +7,62 @@
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-mpi4py-import-200-scratch-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:10:00
+#SBATCH --qos=normal
+#SBATCH --time=10
+
+# Configuration.
+
+commit=true
+debug=false
 
 # Load modules.
 
+module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
-module list
 
-# Verbose debugging output.
+# Optional debug output.
 
-set -x
+if [ $debug = true ]; then
+    module list
+    set -x
+fi
 
 # Stage and activate virtualenv.
 
-envsrc=/global/common/edison/usg/python/mpi4py-import
-envdest=$SCRATCH
-envpath=$envdest/mpi4py-import
+benchmark_src=/global/common/edison/usg/python/mpi4py-import
+benchmark_dest=$SCRATCH/staged-mpi4py-import
+benchmark_path=$benchmark_dest/mpi4py-import
 
-mkdir -p $envpath
-tar cf - -C $envsrc . | (cd $envpath; tar xf -)
+mkdir -p $benchmark_dest
+time rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
+sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
+source $benchmark_path/bin/activate
 
-sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$envpath\"|" $envpath/bin/activate
-source $envpath/bin/activate
-
-# Run benchmark.
-
-time srun python mpi4py-import.py $(date +%s)
-
-# Sanity checks.
+# Sanity checks, re-generate bytecode files.
 
 which python
 python -c "import numpy; print numpy.__path__"
 strace python -c "import numpy" 2>&1 | grep "open(" | wc
 
-# For usgweb.
+# Initialize benchmark result.
 
-if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Edison_Perf/Pynamic/$SLURM_JOB_ID
+if [ $commit = true ]; then
+    module load mysql
+    module load mysqlpython
+    python report-benchmark.py initialize
+    module unload mysqlpython
 fi
 
-# Clean-up.
+# Run benchmark.
 
-rm -rf $envpath
+output=latest-$SLURM_JOB_NAME.txt
+time srun python mpi4py-import.py $(date +%s) | tee $output
+
+# Finalize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysqlpython
+    python report-benchmark.py finalize $( grep elapsed $output | awk '{ print $NF }' )
+fi

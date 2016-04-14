@@ -1,14 +1,14 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=edison-mpi4py-import-200-project
+#SBATCH --job-name=edison-mpi4py-import-004-scratch
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=200
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=24
-#SBATCH --output=slurm-edison-mpi4py-import-200-project-%j.out
+#SBATCH --output=slurm-edison-mpi4py-import-004-scratch-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=10
+#SBATCH --time=5
 
 # Configuration.
 
@@ -31,8 +31,8 @@ fi
 
 # Stage and activate virtualenv.
 
-benchmark_src=/usr/common/usg/python/mpi4py-import
-benchmark_dest=/project/projectdirs/mpccc/$USER/staged-mpi4py-import/$NERSC_HOST
+benchmark_src=/global/common/edison/usg/python/mpi4py-import
+benchmark_dest=$SCRATCH/staged-mpi4py-import
 benchmark_path=$benchmark_dest/mpi4py-import
 
 mkdir -p $benchmark_dest

@@ -1,14 +1,14 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --job-name=edison-mpi4py-import-200-project
+#SBATCH --job-name=edison-mpi4py-import-004-tmpfs
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
-#SBATCH --nodes=200
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=24
-#SBATCH --output=slurm-edison-mpi4py-import-200-project-%j.out
+#SBATCH --output=slurm-edison-mpi4py-import-004-tmpfs-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=10
+#SBATCH --time=5
 
 # Configuration.
 
@@ -32,13 +32,17 @@ fi
 # Stage and activate virtualenv.
 
 benchmark_src=/usr/common/usg/python/mpi4py-import
-benchmark_dest=/project/projectdirs/mpccc/$USER/staged-mpi4py-import/$NERSC_HOST
+benchmark_dest=/dev/shm/mpi4py-import/$SLURM_JOBID
 benchmark_path=$benchmark_dest/mpi4py-import
 
-mkdir -p $benchmark_dest
-time rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
-sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
+srun -n $SLURM_JOB_NUM_NODES mkdir -p $benchmark_dest
+sleep 5
+time srun -n $SLURM_JOB_NUM_NODES rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
+sleep 5
+srun -n $SLURM_JOB_NUM_NODES sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
+sleep 5
 source $benchmark_path/bin/activate
+sleep 5
 
 # Sanity checks, re-generate bytecode files.
 

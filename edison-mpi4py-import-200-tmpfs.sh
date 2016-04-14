@@ -7,54 +7,66 @@
 #SBATCH --ntasks-per-node=24
 #SBATCH --output=slurm-edison-mpi4py-import-200-tmpfs-%j.out
 #SBATCH --partition=regular
-#SBATCH --qos=low
-#SBATCH --time=00:10:00
+#SBATCH --qos=normal
+#SBATCH --time=10
+
+# Configuration.
+
+commit=true
+debug=false
 
 # Load modules.
 
+module unload python
+module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
-module list
 
-# Verbose debugging output.
+# Optional debug output.
 
-set -x
+if [ $debug = true ]; then
+    module list
+    set -x
+fi
 
 # Stage and activate virtualenv.
 
-envsrc=/usr/common/usg/python/mpi4py-import
-envdest=/dev/shm/mpi4py-import/$SLURM_JOBID
-envpath=$envdest/mpi4py-import
+benchmark_src=/usr/common/usg/python/mpi4py-import
+benchmark_dest=/dev/shm/mpi4py-import/$SLURM_JOBID
+benchmark_path=$benchmark_dest/mpi4py-import
 
-umask 0000
-srun -n $SLURM_JOB_NUM_NODES mkdir -p $envdest
+srun -n $SLURM_JOB_NUM_NODES mkdir -p $benchmark_dest
 sleep 5
-srun -n $SLURM_JOB_NUM_NODES tar cf $envdest/mpi4py-import.tar -C /usr/common/usg/python mpi4py-import 
-cd $envdest
-srun -n $SLURM_JOB_NUM_NODES tar xf mpi4py-import.tar
-cd -
+time srun -n $SLURM_JOB_NUM_NODES rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
 sleep 5
-srun -n $SLURM_JOB_NUM_NODES sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$envpath\"|" $envpath/bin/activate
+srun -n $SLURM_JOB_NUM_NODES sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
 sleep 5
-source $envpath/bin/activate
+source $benchmark_path/bin/activate
 sleep 5
 
-# Run benchmark.
-
-time srun python mpi4py-import.py $(date +%s)
-
-# Sanity checks.
+# Sanity checks, re-generate bytecode files.
 
 which python
 python -c "import numpy; print numpy.__path__"
 strace python -c "import numpy" 2>&1 | grep "open(" | wc
 
-# For usgweb.
+# Initialize benchmark result.
 
-if [ "$USER" == "fbench" ]; then
-    touch $SCRATCH/Edison_Perf/Pynamic/$SLURM_JOB_ID
+if [ $commit = true ]; then
+    module load mysql
+    module load mysqlpython
+    python report-benchmark.py initialize
+    module unload mysqlpython
 fi
 
-# Clean-up.
+# Run benchmark.
 
-srun -n $SLURM_JOB_NUM_NODES rm -rf $envpath
+output=latest-$SLURM_JOB_NAME.txt
+time srun python mpi4py-import.py $(date +%s) | tee $output
+
+# Finalize benchmark result.
+
+if [ $commit = true ]; then
+    module load mysqlpython
+    python report-benchmark.py finalize $( grep elapsed $output | awk '{ print $NF }' )
+fi
