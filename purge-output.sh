@@ -1,4 +1,3 @@
-#!/bin/bash
-# Remove any slurm-*.out files older than a day.
+#!/bin/bash -l
+# Remove any slurm-*.out files older than a few days.
 find . -name "slurm-*.out" -mtime +3 -exec rm -f {} \;
-
