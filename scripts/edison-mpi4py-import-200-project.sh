@@ -1,6 +1,7 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
 #SBATCH --job-name=edison-mpi4py-import-200-project
+#SBATCH --license=project
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=200
