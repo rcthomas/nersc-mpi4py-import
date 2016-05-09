@@ -1,5 +1,6 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
+#SBATCH --license=SCRATCH
 #SBATCH --job-name=edison-mpi4py-import-004-scratch
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
