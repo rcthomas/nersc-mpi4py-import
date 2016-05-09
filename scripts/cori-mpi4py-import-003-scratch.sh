@@ -1,7 +1,7 @@
 #!/bin/bash 
 #SBATCH --account=mpccc
-#SBATCH --license=SCRATCH
 #SBATCH --job-name=cori-mpi4py-import-003-scratch
+#SBATCH --license=SCRATCH
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=3
