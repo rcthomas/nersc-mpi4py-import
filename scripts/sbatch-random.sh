@@ -1,4 +1,8 @@
 #!/bin/bash -l
+
+module load git
+git pull
+
 benchmarks=($(ls $1*.sh))
 n_benchmarks=${#benchmarks[*]}
 selected_benchmark=${benchmarks[$((RANDOM%n_benchmarks))]}
