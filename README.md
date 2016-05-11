@@ -6,7 +6,7 @@ This document describes the deployment and operation of the mpi4py-import benchm
 
 The mpi4py-import benchmark measures realistic typical Python import performance at scale.
 It does this by trying to import a test package suite containing packages that users commonly use.
-Right now this consists of just `numpy` but the suite could be expanded if needed.
+Right now this consists of `numpy` and `astropy` (added 2016-05-11) but the suite could be expanded if needed.
 The idea is to use a package or packages with several thousand file metadata operations to provide an indicator that users can reference to gauge how long they
     can expect typical imports to take at scale.
 The benchmark is not exhaustive by any means, but is easy to understand and seems to test things more meaningful to users than Pynamic does.

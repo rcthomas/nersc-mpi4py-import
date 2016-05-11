@@ -3,7 +3,7 @@
 # This script constructs a relocatable virtual environment containing mpi4py
 # and numpy.  Here is how to use it.  Type
 #
-#   ./build.sh
+#   ./build-virtualenv.sh
 #   ...
 #   cp mpi4py-import /usr/common/... (depends on machine)
 #   [replace VIRTUAL_ENV in /usr/common/.../mpi4py-import/bin/activate]
@@ -58,13 +58,13 @@ rm -rf $mpi4py $mpi4py_tgz
 # Additional packages via pip.
  
 pip install --no-cache-dir numpy
-# pip install --no-cache-dir astropy
+pip install --no-cache-dir astropy
 
 # Diagnostics.
 
-# echo $PYTHONPATH
-# strace python -c "import astropy" 2>&1 | grep "open(" | wc
-# 
-# module unload virtualenv
-# echo $PYTHONPATH
-# strace python -c "import astropy" 2>&1 | grep "open(" | wc
+echo PYTHONPATH: $PYTHONPATH
+strace python -c "import astropy" 2>&1 | grep "open(" | wc
+
+module unload virtualenv
+echo PYTHONPATH: $PYTHONPATH
+strace python -c "import astropy" 2>&1 | grep "open(" | wc
