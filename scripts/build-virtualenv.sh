@@ -58,3 +58,13 @@ rm -rf $mpi4py $mpi4py_tgz
 # Additional packages via pip.
  
 pip install --no-cache-dir numpy
+# pip install --no-cache-dir astropy
+
+# Diagnostics.
+
+# echo $PYTHONPATH
+# strace python -c "import astropy" 2>&1 | grep "open(" | wc
+# 
+# module unload virtualenv
+# echo $PYTHONPATH
+# strace python -c "import astropy" 2>&1 | grep "open(" | wc
