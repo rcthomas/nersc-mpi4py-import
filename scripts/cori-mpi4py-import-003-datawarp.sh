@@ -57,8 +57,8 @@ export PMI_MMAP_SYNC_WAIT_TIME=300
 
 which python
 echo PYTHONPATH: $PYTHONPATH
-python -c "import numpy; print numpy.__path__"
-strace python -c "import numpy" 2>&1 | grep "open(" | wc
+python -c "import astropy; print astropy.__path__"
+strace python -c "import astropy" 2>&1 | grep "open(" | wc
 
 # Run benchmark.
 

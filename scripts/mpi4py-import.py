@@ -15,6 +15,7 @@ import sys
 import time
 try :
     import numpy
+    import astropy
 except :
     print sys.exc_info()[ : 2 ]
     comm.Abort()
