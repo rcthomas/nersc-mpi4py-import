@@ -5,7 +5,7 @@
 #SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=150
 #SBATCH --ntasks-per-node=32
-#SBATCH --output=slurm-cori-mpi4py-import-150-datawarp-%j.out
+#SBATCH --output=logs/slurm-cori-mpi4py-import-150-datawarp-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
 #SBATCH --time=10

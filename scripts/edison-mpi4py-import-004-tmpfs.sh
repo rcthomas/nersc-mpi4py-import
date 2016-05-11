@@ -5,7 +5,7 @@
 #SBATCH --mail-user=rcthomas@lbl.gov
 #SBATCH --nodes=4
 #SBATCH --ntasks-per-node=24
-#SBATCH --output=slurm-edison-mpi4py-import-004-tmpfs-%j.out
+#SBATCH --output=logs/slurm-edison-mpi4py-import-004-tmpfs-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
 #SBATCH --time=5
