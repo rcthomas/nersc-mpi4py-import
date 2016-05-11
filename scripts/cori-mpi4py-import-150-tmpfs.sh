@@ -44,12 +44,6 @@ sleep 5
 source $benchmark_path/bin/activate
 sleep 5
 
-# Sanity checks.
-
-which python
-python -c "import numpy; print numpy.__path__"
-strace python -c "import numpy" 2>&1 | grep "open(" | wc
-
 # Initialize benchmark result.
 
 if [ $commit = true ]; then
@@ -58,6 +52,13 @@ if [ $commit = true ]; then
     python report-benchmark.py initialize
     module unload mysqlpython
 fi
+
+# Sanity checks.
+
+which python
+echo PYTHONPATH: $PYTHONPATH
+python -c "import numpy; print numpy.__path__"
+strace python -c "import numpy" 2>&1 | grep "open(" | wc
 
 # Run benchmark.
 

@@ -41,12 +41,6 @@ time rsync -az --exclude "*.pyc" $benchmark_src $benchmark_dest
 sed -i "s|^VIRTUAL_ENV=.*$|VIRTUAL_ENV=\"$benchmark_path\"|" $benchmark_path/bin/activate
 source $benchmark_path/bin/activate
 
-# Sanity checks, re-generate bytecode files.
-
-which python
-python -c "import numpy; print numpy.__path__"
-strace python -c "import numpy" 2>&1 | grep "open(" | wc
-
 # Initialize benchmark result.
 
 if [ $commit = true ]; then
@@ -55,6 +49,13 @@ if [ $commit = true ]; then
     python report-benchmark.py initialize
     module unload mysqlpython
 fi
+
+# Sanity checks, re-generate bytecode files.
+
+which python
+echo PYTHONPATH: $PYTHONPATH
+python -c "import numpy; print numpy.__path__"
+strace python -c "import numpy" 2>&1 | grep "open(" | wc
 
 # Run benchmark.
 
