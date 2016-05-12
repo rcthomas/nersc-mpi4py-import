@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
-# module load git
-# git pull
+module load git
+git pull origin master
 
 benchmarks=($(ls $1*.sh))
 n_benchmarks=${#benchmarks[*]}
