@@ -8,7 +8,7 @@
 #SBATCH --output=logs/slurm-edison-mpi4py-import-004-common-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=5
+#SBATCH --time=10
 
 # Configuration.
 

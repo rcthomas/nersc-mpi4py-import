@@ -8,7 +8,7 @@
 #SBATCH --output=logs/slurm-cori-mpi4py-import-003-datawarp-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=5
+#SBATCH --time=10
 #DW jobdw capacity=2TB access_mode=striped type=scratch
 
 # Configuration.

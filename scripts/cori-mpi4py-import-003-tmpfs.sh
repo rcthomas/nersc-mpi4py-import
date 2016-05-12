@@ -8,7 +8,7 @@
 #SBATCH --output=logs/slurm-cori-mpi4py-import-003-tmpfs-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=5
+#SBATCH --time=10
 
 # Configuration.
 
