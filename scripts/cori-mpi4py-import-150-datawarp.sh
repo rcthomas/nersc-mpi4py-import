@@ -53,6 +53,7 @@ fi
 
 which python
 echo PYTHONPATH: $PYTHONPATH
+python -c 'import sys; print "\n".join( sys.path )'
 python -c "import astropy; print astropy.__path__"
 strace python -c "import astropy" 2>&1 | grep "open(" | wc
 

@@ -9,7 +9,7 @@
 #SBATCH --output=logs/slurm-cori-mpi4py-import-150-project-%j.out
 #SBATCH --partition=regular
 #SBATCH --qos=normal
-#SBATCH --time=40
+#SBATCH --time=60
 
 # Configuration.
 
@@ -54,6 +54,7 @@ fi
 
 which python
 echo PYTHONPATH: $PYTHONPATH
+python -c 'import sys; print "\n".join( sys.path )'
 python -c "import astropy; print astropy.__path__"
 strace python -c "import astropy" 2>&1 | grep "open(" | wc
 

@@ -57,6 +57,7 @@ export PMI_MMAP_SYNC_WAIT_TIME=300
 
 which python
 echo PYTHONPATH: $PYTHONPATH
+python -c 'import sys; print "\n".join( sys.path )'
 python -c "import astropy; print astropy.__path__"
 strace python -c "import astropy" 2>&1 | grep "open(" | wc
 
