@@ -63,8 +63,8 @@ pip install --no-cache-dir astropy
 # Diagnostics.
 
 echo PYTHONPATH: $PYTHONPATH
-strace python -c "import astropy" 2>&1 | grep "open(" | wc
+strace -f -c python -c "import astropy"
 
 module unload virtualenv
 echo PYTHONPATH: $PYTHONPATH
-strace python -c "import astropy" 2>&1 | grep "open(" | wc
+strace -f -c python -c "import astropy"
