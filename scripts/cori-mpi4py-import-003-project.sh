@@ -19,7 +19,6 @@ debug=false
 # Load modules.
 
 module unload python
-module unload altd
 module swap PrgEnv-intel PrgEnv-gnu
 module load python_base
 
